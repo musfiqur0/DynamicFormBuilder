@@ -1,0 +1,50 @@
+@{
+    ViewData["Title"] = "Forms List";
+}
+
+<h1>Forms</h1>
+<p>
+    <a class="btn btn-success" asp-action="Create">Create New Form</a>
+</p>
+
+<table id="formsTable" class="display table table-bordered table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Created Date</th>
+            <th style="width:120px">Actions</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Initialise DataTable and load data via AJAX
+            $('#formsTable').DataTable({
+                processing: true,
+                serverSide: true,    //DataTables will send start/length
+                searching: false,    //no search box
+                ordering: false,     //optional – disable ordering if you want
+                ajax: {
+                    url: '@Url.Action("GetForms", "Form")',
+                    type: 'GET',
+                    dataSrc: 'data'
+                },
+                columns: [
+                    { data: 'title' },
+                    { data: 'createdDate' },
+                    {
+                        data: 'id',
+                        render: function (data, type, row) {
+                            return '<a href="' + '@Url.Action("Preview", "Form")' + '/' + data + '" class="btn btn-sm btn-primary">Preview</a>';
+                        },
+                        orderable: false,
+                        searchable: false
+                    }
+                ]
+            });
+        });
+    </script>
+}

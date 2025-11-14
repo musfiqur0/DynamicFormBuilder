@@ -1,0 +1,50 @@
+@model DynamicFormBuilder.Models.Form
+
+@{
+    ViewData["Title"] = "Preview Form";
+}
+
+<h1>@Model.Title</h1>
+
+<div>
+    @foreach (var field in Model.Fields)
+    {
+        <div class="preview-field">
+            <label class="form-label">
+                @field.Label
+                @if (field.IsRequired)
+                {
+                    <span class="required-asterisk">*</span>
+                }
+            </label>
+            <select class="form-select" disabled>
+                @if (field.SelectedOption == "Option 1")
+                {
+                    <option value="Option 1" selected>Option 1</option>
+                }
+                else
+                {
+                    <option value="Option 1">Option 1</option>
+                }
+                @if (field.SelectedOption == "Option 2")
+                {
+                    <option value="Option 2" selected>Option 2</option>
+                }
+                else
+                {
+                    <option value="Option 2">Option 2</option>
+                }
+                @if (field.SelectedOption == "Option 3")
+                {
+                    <option value="Option 3" selected>Option 3</option>
+                }
+                else
+                {
+                    <option value="Option 3">Option 3</option>
+                }
+            </select>
+        </div>
+    }
+</div>
+
+<a asp-action="Index" class="btn btn-secondary">Back to List</a>

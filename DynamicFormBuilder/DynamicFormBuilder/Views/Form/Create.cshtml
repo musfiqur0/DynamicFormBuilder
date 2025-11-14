@@ -1,0 +1,141 @@
+@model DynamicFormBuilder.Models.FormViewModel
+
+@{
+    ViewData["Title"] = "Create Form";
+}
+
+<h1>Create Form</h1>
+
+<form asp-action="Create" method="post" id="formBuilder">
+    @Html.AntiForgeryToken()
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <h5>Fields</h5>
+    <div id="fieldsContainer">
+        <!-- Initial field template rendered by the server -->
+        @for (int i = 0; i < Model.Fields.Count; i++)
+        {
+            <div class="field-group border rounded p-3 mb-3">
+                <div class="row g-2">
+                    <div class="col-md-4">
+                        <label class="form-label">Label</label>
+                        <input name="Fields[@i].Label" value="@Model.Fields[i].Label" class="form-control" />
+                        <span class="text-danger" data-valmsg-for="Fields[@i].Label" data-valmsg-replace="true"></span>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Required</label>
+                        <div class="form-check">
+                            <input type="checkbox"
+                                   name="Fields[@i].IsRequired"
+                                   value="true"
+                                   class="form-check-input"
+                                   @(Model.Fields[i].IsRequired ? "checked=\"checked\"" : "") />
+                            @* <input type="hidden" name="Fields[@i].IsRequired" value="false" /> *@
+                            @* <input type="checkbox"
+                                   name="Fields[@i].IsRequired"
+                                   value="true"
+                                   class="form-check-input"
+                                   @(Model.Fields[i].IsRequired ? "value=true" : "value=false") /> *@
+                            @* @if (Model.Fields[i].IsRequired)
+                            {
+                                <input type="checkbox" name="Fields[@i].IsRequired" value=true class="form-check-input" />
+                            }
+                            else
+                            {
+                                <input type="checkbox" name="Fields[@i].IsRequired" class="form-check-input" checked />
+                            } *@
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Options</label>
+                        <select name="Fields[@i].SelectedOption" class="form-select">
+                            <option value="">--Select--</option>
+                            @if (Model.Fields[i].SelectedOption == "Option 1")
+                            {
+                                <option value="Option 1" selected>Option 1</option>
+                            }
+                            else
+                            {
+                                <option value="Option 1">Option 1</option>
+                            }
+                            @if (Model.Fields[i].SelectedOption == "Option 2")
+                            {
+                                <option value="Option 2" selected>Option 2</option>
+                            }
+                            else
+                            {
+                                <option value="Option 2">Option 2</option>
+                            }
+                            @if (Model.Fields[i].SelectedOption == "Option 3")
+                            {
+                                <option value="Option 3" selected>Option 3</option>
+                            }
+                            else
+                            {
+                                <option value="Option 3">Option 3</option>
+                            }
+                        </select>
+                        <span class="text-danger" data-valmsg-for="Fields[@i].SelectedOption" data-valmsg-replace="true"></span>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="button" class="btn btn-danger remove-field">Remove</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="mb-3">
+        <button type="button" id="addField" class="btn btn-secondary">Add More</button>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+</form>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            var fieldIndex = $('#fieldsContainer .field-group').length;
+            $('#addField').on('click', function () {
+                var index = fieldIndex++;
+                var fieldHtml = `
+<div class="field-group border rounded p-3 mb-3">
+    <div class="row g-2">
+        <div class="col-md-4">
+            <label class="form-label">Label</label>
+            <input name="Fields[${index}].Label" class="form-control" />
+            <span class="text-danger" data-valmsg-for="Fields[${index}].Label" data-valmsg-replace="true"></span>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Required</label>
+            <div class="form-check">
+                <input type="checkbox" name="Fields[${index}].IsRequired" value="true" class="form-check-input" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Options</label>
+            <select name="Fields[${index}].SelectedOption" class="form-select">
+                <option value="">--Select--</option>
+                <option value="Option 1">Option 1</option>
+                <option value="Option 2">Option 2</option>
+                <option value="Option 3">Option 3</option>
+            </select>
+            <span class="text-danger" data-valmsg-for="Fields[${index}].SelectedOption" data-valmsg-replace="true"></span>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="button" class="btn btn-danger remove-field">Remove</button>
+        </div>
+    </div>
+</div>`;
+                $('#fieldsContainer').append(fieldHtml);
+                // Apply jQuery unobtrusive validation to the new elements
+                $.validator.unobtrusive.parse($('#fieldsContainer').children().last());
+            });
+            // Remove field handler
+            $('#fieldsContainer').on('click', '.remove-field', function () {
+                $(this).closest('.field-group').remove();
+            });
+        });
+    </script>
+}

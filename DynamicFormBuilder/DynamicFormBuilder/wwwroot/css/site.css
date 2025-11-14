@@ -1,0 +1,38 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+/* Site CSS for Dynamic Form Builder */
+/*body {
+    padding-bottom: 50px;
+}*/
+
+/* Highlight required fields with a red asterisk next to the label */
+.required-asterisk {
+    color: red;
+    margin-left: 2px;
+}
+
+/* Custom styling for the preview page to visually separate fields */
+.preview-field {
+    margin-bottom: 1rem;
+}
